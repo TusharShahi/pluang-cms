@@ -1,5 +1,5 @@
 import AuthService from './authService';
-import makeRequest from './apiService';
+import { makeRequest } from './apiService';
 
 export {
   AuthService,

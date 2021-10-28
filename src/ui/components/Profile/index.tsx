@@ -1,8 +1,8 @@
-
+import { useStateValue } from '../../../utils/redux';
 
 
 const ProfileComponent = (): JSX.Element  => {
-
+  const [storeState, dispatch] = useStateValue();
 
 
 

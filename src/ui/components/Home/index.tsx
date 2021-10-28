@@ -7,12 +7,28 @@ import {USER_DETAILS} from '../../../utils/redux/actions';
 import { useRouter } from 'next/router';
 
 import { PATHS} from '../../../constants/routes';
+import {HomeProps} from '../../../../pages/index';
 
-const HomeComponent = (): JSX.Element  => {
+
+const HomeComponent = (props : HomeProps): JSX.Element  => {
   const [storeState, dispatch] = useStateValue();
-  const [userLoggedIn, setUserLoggedIn] = useState(false);
+  const [userLoggedIn, setUserLoggedIn] = useState(props.userLoggedIn);
   const router = useRouter();
+  console.log(props);
+    //Has to be wrapped in useEffect, cannot setState of one component while rendering another
+  
+   useEffect(() => {
+    dispatch({
+      type: USER_DETAILS,
+      payload: { user : props.getLoggedInUserData}
+    });
+  },[]);
 
+  if(userLoggedIn){
+    typeof window !== 'undefined' &&  router.push(PATHS.PROFILE);
+  } 
+
+  /*
   useEffect(() => {
     const checkMeFunction : () => void = async () => {
       console.log(AuthService.checkIfLoggedIn());
@@ -41,13 +57,16 @@ const HomeComponent = (): JSX.Element  => {
       }
     } 
     checkMeFunction();
-  },[]);
+  },[]); */
 
   return (<>
      {!userLoggedIn && <LoginComponent></LoginComponent>}
     </>
   );
 }
+
+
+
 
 
 export default HomeComponent;

@@ -2,7 +2,7 @@
 import {Form , Button} from 'react-bootstrap'
 import {useState} from 'react';
 import Validator from '../../../helpers/validators';
-import { makeRequest , AuthService  } from '../../../services';
+import { makeRequest , AuthService } from '../../../services';
 
 import {ROUTES , PATHS} from '../../../constants/routes';
 import { sha256 } from 'js-sha256';
@@ -39,16 +39,8 @@ const validateFields  = (email : string, password : string) : boolean => {
 }
 
 
-const createCookieWithExpirationTime = (key : string, value : string) : void => {
-    let now : Date = new Date();
-    let time : number= now.getTime();
-    let expireTime : number = time + 1000*3600;
-    now.setTime(expireTime);
-    document.cookie = `${key}=${value};expires=${now.toUTCString()};path=/`;
-}
 
-
-const LoginComponent = () : JSX.Element   => {
+const ArticleComponent = () : JSX.Element   => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -76,16 +68,9 @@ const LoginComponent = () : JSX.Element   => {
     });
     console.log(result);
     let loginResponseData : LoginResponseData= result.data;
-    
-    //Storing token in cookie 
-    //window.localStorage.setItem(AuthService.ACCESS_TOKEN_KEY, loginResponseData.token);
     console.log('cookie',document.cookie);
-    
-    //Why save the token key if only login
-    createCookieWithExpirationTime(AuthService.COOKIE_KEY,loginResponseData.token);
-    //document.cookie = 'loggedIn=yes';
-
-
+    //window.localStorage.setItem(AuthService.ACCESS_TOKEN_KEY, loginResponseData.token);
+    //createCookieWithExpirationTime('tokenKey',loginResponseData.token);
     router.push(PATHS.PROFILE)
 
   }
@@ -140,6 +125,4 @@ const LoginComponent = () : JSX.Element   => {
     )
 }
 
-
-
-export default LoginComponent
+export default ArticleComponent

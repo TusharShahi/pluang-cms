@@ -62,6 +62,7 @@ axios.interceptors.response.use(
 
 //** Makes an API Request and returns result.data **//
 async function makeRequest(config: AxiosRequestConfigTypes) {
+  if(config.url !== undefined){
   try
   {
     let result = await axios({
@@ -73,8 +74,6 @@ async function makeRequest(config: AxiosRequestConfigTypes) {
     timeout: config.timeout ? config.timeout : 100000,
     cancelToken: config.cancelToken,
   });
-  console.log('result1' , result);
-  console.log(result.data);
   if (result && result.status >= 200 && result.status < 300) {
     return result.data;
   }
@@ -86,6 +85,45 @@ async function makeRequest(config: AxiosRequestConfigTypes) {
     else throw error;
   }
 }
+}
+
+async function makeRequestServer(config: AxiosRequestConfigTypes) {
+  if(config.url !== undefined){
+  try
+  {
+
+    let headerVal = config?.headers?.Authorization || '';
+    console.log(headerVal);
+    const myInit = {
+      method: 'get',
+      headers: {
+        'Authorization': headerVal ,
+      }
+    };
+  
+    let result : Response = await fetch(config.url,myInit);
+   // console.log("------");
+   // console.log('status',result.status);
+  
+    if (result && result.status >= 200 && result.status < 300) {
+      let parsedResult = await result.json();
+    //  console.log('parsedResult',parsedResult);
+      return parsedResult;
+    }
+    //What about else conditions
+
+    }
+    //Cannot have typed catch errors, need to use unknown
+    catch(error : unknown | AxiosError) {
+      console.log(error);
+      console.log(axios.isAxiosError(error));
+      if(axios.isAxiosError(error))
+      throw error.response;
+      else throw error;
+    }
+  }
+}
 
 
-export default makeRequest;
+
+export  { makeRequest , makeRequestServer };
